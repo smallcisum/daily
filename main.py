@@ -100,7 +100,6 @@ quotes = [
     ("我聽見你的聲音，我歡喜快樂。", "I rejoice in your word like one finding great spoil.", "詩篇 119:162"),
     ("神在我們裡面，因為我們遵守他的命令。這就使我們知道，神住在我們裡面，是藉著他所賜給我們的聖靈。", "And this is how we know that he lives in us: We know it by the Spirit he gave us.", "約翰一書 3:24"),
 #信心與盼望
-bible_quotes_batch_3 = [
     ("信就是所望之事的實底，是未見之事的確據。", "Now faith is confidence in what we hope for and assurance about what we do not see.", "希伯來書 11:1"),
     ("敬畏耶和華是智慧的開端；認識至聖者便是聰明。", "The fear of the Lord is the beginning of wisdom, and knowledge of the Holy One is understanding.", "箴言 9:10"), # 重複前批，但仍與智慧、信心相關
     ("人非有信，就不能得神的喜悅；因為到神面前來的人必須信有神，且信他賞賜那尋求他的人。", "And without faith it is impossible to please God, because anyone who comes to him must believe that he exists and that he rewards those who earnestly seek him.", "希伯來書 11:6"),
@@ -153,17 +152,8 @@ bible_quotes_batch_3 = [
     ("願你吸引我，我們就快跑跟隨你。", "Take me away with you—let us hurry! The king has brought me into his chambers.", "雅歌 1:4"), # 這句原文的意境是追求親密關係，與「信心與盼望」的直接關聯較弱，更偏向愛情詩歌。若需替換，寶劍可以提供替代。
     ("你的救恩是我的喜樂。", "I rejoice in your salvation.", "詩篇 9:14")
 
-]
-
-
-
 
     
-]
-
-
-    
-    # ...（繼續加到 100 句）
 ]
 
 # ==== 行動選項 ====
