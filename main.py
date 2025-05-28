@@ -4,14 +4,12 @@ import datetime
 import pytz
 import random
 
-# ==== 設定 ====
+# ==== 設定 OpenWeatherMap ====
 API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"  # OpenWeatherMap API Key
-CITY = "Hsinchu"
 LANG = "zh_tw"
 UNITS = "metric"
-TZ = pytz.timezone("Asia/Taipei")
 
-# ==== 中文星期對照 ====
+# ==== 中文星期對照表 ====
 weekdays = {
     0: "星期一",
     1: "星期二",
@@ -29,7 +27,7 @@ quotes = [
     ("每天都是重新開始的機會。", "Every day is a chance to start anew."),
     ("你的夢想值得你努力。", "Your dreams are worth the effort."),
     ("你走的每一步都算數。", "Every step you take matters."),
-    # ...（繼續加滿 100 句）
+    # ...（繼續加到 100 句）
 ]
 
 # ==== 行動選項 ====
@@ -39,15 +37,19 @@ all_actions = [
     "學習新事物", "吃得健康", "整理空間", "耐心聽人說話", "說實話", "讚美自己", "敢於嘗試", "不逃避", "完成一件小事"
 ]
 
-# ==== 固定語錄與選項 ====
-if "quote" not in st.session_state:
-    st.session_state.quote = random.choice(quotes)
+# ==== 取得使用者地理位置與時區 ====
+def get_location():
+    try:
+        ip_info = requests.get("https://ipapi.co/json").json()
+        city = ip_info.get("city", "Hsinchu")
+        timezone_str = ip_info.get("timezone", "Asia/Taipei")
+        tz = pytz.timezone(timezone_str)
+    except:
+        city = "Hsinchu"
+        tz = pytz.timezone("Asia/Taipei")
+    return city, tz
 
-if "options" not in st.session_state:
-    st.session_state.options = random.sample(all_actions, 3)
-
-quote_ch, quote_en = st.session_state.quote
-options = st.session_state.options
+CITY, TZ = get_location()
 
 # ==== 時間處理 ====
 now = datetime.datetime.now(TZ)
@@ -66,11 +68,22 @@ except:
     weather_desc = "取得失敗"
     temp = "--"
 
+# ==== 小語與選項狀態保存 ====
+if "quote" not in st.session_state:
+    st.session_state.quote = random.choice(quotes)
+
+if "options" not in st.session_state:
+    st.session_state.options = random.sample(all_actions, 3)
+
+quote_ch, quote_en = st.session_state.quote
+options = st.session_state.options
+
 # ==== 畫面顯示 ====
 st.markdown(f"""
+## 📍 根據您目前的位置：**{CITY}**
 ## 📅 日期：{date_str}（{weekday_ch}）
-### 🕰️ 時間：{time_str}
-### 🌤️ 新竹天氣：{weather_desc}，氣溫 {temp}°C
+### 🕰️ 當地時間：{time_str}
+### 🌤️ 天氣：{weather_desc}，氣溫 {temp}°C
 
 ---
 
