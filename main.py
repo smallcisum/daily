@@ -8,17 +8,19 @@ API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"
 LANG = "zh_tw"
 UNITS = "metric"
 
-# 支援2~4欄語錄
-quotes_raw = [
-    ("成功是每天積小步前進。", "Success is the sum of small efforts repeated every day."),
-    ("我靠著那加給我力量的，凡事都能做：", "I can do all things through Christ who strengthens me.", "腓立比書 4:13", "鼓勵"),
-    ("耶和華是我的牧者，我必不致缺乏：", "The Lord is my shepherd; I shall not want.", "詩篇 23:1"),
-    ("你們當將一切的憂慮卸給神：", "Cast all your anxiety on him because he cares for you.", "彼得前書 5:7"),
-]
+# === 載入 GitHub JSON 語錄 ===
+JSON_URL = "https://raw.githubusercontent.com/smallcisum/bible/main/bible.json"
 
-def normalize_quotes(quotes):
-    result = []
-    for q in quotes:
+def load_quotes_from_json(url):
+    try:
+        res = requests.get(url, timeout=5)
+        raw_data = res.json()
+    except:
+        return [("⚠️ 無法載入資料", "Failed to load data", "", "")]
+
+    # 統一格式為4欄
+    normalized = []
+    for q in raw_data:
         if len(q) == 2:
             zh, en = q
             ref, tag = "", ""
@@ -29,10 +31,13 @@ def normalize_quotes(quotes):
             zh, en, ref, tag = q
         else:
             zh, en, ref, tag = "⚠️ 格式錯誤", "Invalid format", "", ""
-        result.append((zh.strip(), en.strip(), ref.strip(), tag.strip()))
-    return result
+        normalized.append((zh.strip(), en.strip(), ref.strip(), tag.strip()))
+    return normalized
 
-quotes = normalize_quotes(quotes_raw)
+quotes = load_quotes_from_json(JSON_URL)
+
+
+
 
 all_actions = [
     "努力", "奮起", "開心", "積極", "有效率", "放鬆", "溫柔", "專注", "快樂", "冒險",
