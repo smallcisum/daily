@@ -5,7 +5,7 @@ import pytz
 import random
 
 # ==== OpenWeatherMap 設定 ====
-API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"
+API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"  # 💡 已幫妳放好金鑰
 LANG = "zh_tw"
 UNITS = "metric"
 
@@ -15,12 +15,13 @@ weekdays = {
     3: "星期四", 4: "星期五", 5: "星期六", 6: "星期日"
 }
 
-# ==== 自動取得使用者城市與時區 ====
+# ==== 使用 ip-api.com 取得地點與時區 ====
 def get_location():
     try:
-        ip_info = requests.get("https://ipapi.co/json", timeout=5).json()
-        city = ip_info.get("city", "Hsinchu")
-        timezone_str = ip_info.get("timezone", "Asia/Taipei")
+        res = requests.get("http://ip-api.com/json", timeout=5)
+        data = res.json()
+        city = data.get("city", "Hsinchu")
+        timezone_str = data.get("timezone", "Asia/Taipei")
         tz = pytz.timezone(timezone_str)
     except Exception as e:
         st.warning(f"⚠️ 無法取得位置資訊，使用預設：Hsinchu\n（錯誤訊息：{e}）")
@@ -30,13 +31,13 @@ def get_location():
 
 CITY, TZ = get_location()
 
-# ==== 取得時間 ====
+# ==== 取得當地時間 ====
 now = datetime.datetime.now(TZ)
 date_str = now.strftime("%Y/%m/%d")
 weekday_ch = weekdays[now.weekday()]
 time_str = now.strftime("%H:%M")
 
-# ==== 取得天氣 ====
+# ==== 天氣資料 ====
 try:
     weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units={UNITS}&lang={LANG}"
     response = requests.get(weather_url)
@@ -44,17 +45,16 @@ try:
     weather_desc = weather_data["weather"][0]["description"]
     temp = weather_data["main"]["temp"]
 except Exception as e:
-    weather_desc = f"天氣取得失敗：{e}"
+    weather_desc = f"取得失敗：{e}"
     temp = "--"
 
-# ==== 語錄清單（2 or 3 欄皆可）====
+# ==== 語錄（可2欄或3欄）====
 quotes_raw = [
     ("我靠著那加給我力量的，凡事都能做。", "I can do all things through Christ who strengthens me."),
     ("耶和華是我的牧者，我必不致缺乏。", "The Lord is my shepherd; I shall not want.", "詩篇 23:1"),
-    # 可自行加入更多語錄
+    # 可再貼進妳的超長語錄清單
 ]
 
-# ==== 語錄標準化 ====
 def normalize_quotes(quotes):
     normalized = []
     for q in quotes:
@@ -73,9 +73,10 @@ quotes = normalize_quotes(quotes_raw)
 # ==== 行動選項 ====
 all_actions = [
     "努力", "奮起", "開心", "放鬆", "陪伴", "深呼吸", "快樂", "原諒自己", "學習新事物", "讚美別人"
+    # 可以加更多
 ]
 
-# ==== 初次載入隨機設定 ====
+# ==== 初次載入隨機狀態 ====
 if "quote" not in st.session_state:
     st.session_state.quote = random.choice(quotes)
 
