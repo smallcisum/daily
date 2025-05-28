@@ -5,7 +5,7 @@ import pytz
 import random
 
 # ==== 設定 ====
-API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"  # 妳的 OpenWeatherMap API Key
+API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"  # OpenWeatherMap API Key
 CITY = "Hsinchu"
 LANG = "zh_tw"
 UNITS = "metric"
@@ -29,15 +29,25 @@ quotes = [
     ("每天都是重新開始的機會。", "Every day is a chance to start anew."),
     ("你的夢想值得你努力。", "Your dreams are worth the effort."),
     ("你走的每一步都算數。", "Every step you take matters."),
-    # 可繼續補充到100句
+    # ...（繼續加滿 100 句）
 ]
 
 # ==== 行動選項 ====
 all_actions = [
     "努力", "奮起", "開心", "積極", "有效率", "放鬆", "溫柔", "專注", "快樂", "冒險",
     "深呼吸", "陪伴", "關懷", "觀察自己", "讚美別人", "早睡", "喝水", "多走路", "不抱怨", "大笑",
-    "學習新事物", "吃得健康", "整理空間", "耐心聽人說話", "說實話", "讚美自己", "敢於嘗試", "積極", "不逃避", "完成一件小事"
+    "學習新事物", "吃得健康", "整理空間", "耐心聽人說話", "說實話", "讚美自己", "敢於嘗試", "不逃避", "完成一件小事"
 ]
+
+# ==== 固定語錄與選項 ====
+if "quote" not in st.session_state:
+    st.session_state.quote = random.choice(quotes)
+
+if "options" not in st.session_state:
+    st.session_state.options = random.sample(all_actions, 3)
+
+quote_ch, quote_en = st.session_state.quote
+options = st.session_state.options
 
 # ==== 時間處理 ====
 now = datetime.datetime.now(TZ)
@@ -55,10 +65,6 @@ try:
 except:
     weather_desc = "取得失敗"
     temp = "--"
-
-# ==== 小語 + 選項 ====
-quote_ch, quote_en = random.choice(quotes)
-options = random.sample(all_actions, 3)
 
 # ==== 畫面顯示 ====
 st.markdown(f"""
