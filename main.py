@@ -28,8 +28,8 @@ quotes = [
     ("你的夢想值得你努力。", "Your dreams are worth the effort."),
     ("你走的每一步都算數。", "Every step you take matters."),
     #安慰與鼓勵
-    ("我靠著那加給我力量的，凡事都能做。", "I can do all things through Christ who strengthens me.", "腓立比書 4:13"),
-    ("你們當將一切的憂慮卸給神，因為他顧念你們。", "Cast all your anxiety on him because he cares for you.", "彼得前書 5:7"),
+    ("我靠著那加給我力量的，凡事都能做。腓立比書 4:13", "I can do all things through Christ who strengthens me."),
+    ("你們當將一切的憂慮卸給神，因為他顧念你們。彼得前書 5:7", "Cast all your anxiety on him because he cares for you."),
     ("壓傷的蘆葦，他不折斷；將殘的燈火，他不吹滅。", "A bruised reed he will not break, and a smoldering wick he will not snuff out.", "馬太福音 12:20"),
     ("耶和華是我的牧者，我必不致缺乏。", "The Lord is my shepherd; I shall not want.", "詩篇 23:1"),
     ("疲乏的，他賜能力；軟弱的，他加力量。", "He gives strength to the weary and increases the power of the weak.", "以賽亞書 40:29"),
