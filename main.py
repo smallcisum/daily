@@ -4,8 +4,8 @@ import datetime
 import pytz
 import random
 
-# ==== OpenWeatherMap 設定 ====
-API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"
+# ==== 設定 OpenWeatherMap ====
+API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"  # OpenWeatherMap API Key
 LANG = "zh_tw"
 UNITS = "metric"
 
@@ -27,7 +27,7 @@ quotes = [
     ("每天都是重新開始的機會。", "Every day is a chance to start anew."),
     ("你的夢想值得你努力。", "Your dreams are worth the effort."),
     ("你走的每一步都算數。", "Every step you take matters."),
-    # ...（可繼續加到100句）
+    # ...（繼續加到 100 句）
 ]
 
 # ==== 行動選項 ====
@@ -37,7 +37,7 @@ all_actions = [
     "學習新事物", "吃得健康", "整理空間", "耐心聽人說話", "說實話", "讚美自己", "敢於嘗試", "不逃避", "完成一件小事"
 ]
 
-# ==== IP 取得位置與時區 ====
+# ==== 取得使用者地理位置與時區 ====
 def get_location():
     try:
         ip_info = requests.get("https://ipapi.co/json").json()
@@ -49,22 +49,15 @@ def get_location():
         tz = pytz.timezone("Asia/Taipei")
     return city, tz
 
-# ==== 使用者選擇是否自動定位 ====
-use_auto = st.checkbox("🔍 根據我的位置顯示天氣與時間", value=True)
+CITY, TZ = get_location()
 
-if use_auto:
-    CITY, TZ = get_location()
-else:
-    CITY = "Hsinchu"
-    TZ = pytz.timezone("Asia/Taipei")
-
-# ==== 時間 ====
+# ==== 時間處理 ====
 now = datetime.datetime.now(TZ)
 date_str = now.strftime("%Y/%m/%d")
 weekday_ch = weekdays[now.weekday()]
 time_str = now.strftime("%H:%M")
 
-# ==== 天氣 ====
+# ==== 天氣資料 ====
 weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units={UNITS}&lang={LANG}"
 try:
     response = requests.get(weather_url)
@@ -75,7 +68,7 @@ except:
     weather_desc = "取得失敗"
     temp = "--"
 
-# ==== 小語狀態 ====
+# ==== 小語與選項狀態保存 ====
 if "quote" not in st.session_state:
     st.session_state.quote = random.choice(quotes)
 
@@ -85,10 +78,9 @@ if "options" not in st.session_state:
 quote_ch, quote_en = st.session_state.quote
 options = st.session_state.options
 
-# ==== 顯示畫面 ====
+# ==== 畫面顯示 ====
 st.markdown(f"""
-## 📍 當前城市：**{CITY}**
-### 🕓 時區：**{TZ.zone}**
+## 📍 根據您目前的位置：**{CITY}**
 ## 📅 日期：{date_str}（{weekday_ch}）
 ### 🕰️ 當地時間：{time_str}
 ### 🌤️ 天氣：{weather_desc}，氣溫 {temp}°C
