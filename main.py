@@ -9,7 +9,7 @@ API_KEY = "11e1ae55357eb1c7ab1b8823783fa5c9"
 LANG = "zh_tw"
 UNITS = "metric"
 
-# === 語錄來源（GitHub JSON）===
+# === 語錄來源（GitHub JSON） ===
 JSON_URL = "https://raw.githubusercontent.com/smallcisum/bible/main/bible.json"
 
 def load_quotes_from_json(url):
@@ -37,17 +37,16 @@ all_actions = [
     "學習新事物", "吃得健康", "整理空間", "耐心聽人說話", "說實話", "讚美自己", "敢於嘗試", "不逃避", "完成一件小事"
 ]
 
-# === 手動選城市 ===
-city_options = ["Hsinchu", "Taipei", "Taichung", "Tainan", "Kaohsiung"]
-CITY = st.selectbox("請選擇城市：", city_options, index=0)
+# === 手動選擇地點 ===
+city_list = ["Hsinchu", "Taipei", "Taichung", "Tainan", "Kaohsiung"]
+CITY = st.selectbox("請選擇城市：", city_list)
 TZ = pytz.timezone("Asia/Taipei")
 
-# === 時間處理 ===
 now = datetime.datetime.now(TZ)
 weekday_ch = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"][now.weekday()]
 time_str = now.strftime("%Y/%m/%d (%H:%M)")
 
-# === 天氣資料 ===
+# === 天氣資訊 ===
 weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units={UNITS}&lang={LANG}"
 try:
     res = requests.get(weather_url, timeout=3)
@@ -58,7 +57,7 @@ except:
     weather_desc = "取得失敗"
     temp = "--"
 
-# === 固定每日語錄與選項 ===
+# === 每日語錄與選項（根據日期固定）===
 today_seed = int(now.strftime("%Y%m%d"))
 random.seed(today_seed)
 quote = random.choice(quotes)
@@ -72,8 +71,8 @@ st.markdown(f"#### 📅 時間：{time_str}（{weekday_ch}）")
 st.markdown("---")
 
 st.subheader("✨ 今日小語")
-st.write(f"📖 {quote_ch}" + (f"（{quote_ref}）" if quote_ref else "") + (f" [{quote_tag}]" if quote_tag else ""))
-st.write(f"_🕊️ {quote_en}_")
+st.markdown(f"#### 📖 {quote_ch}" + (f"（{quote_ref}）" if quote_ref else "") + (f" [{quote_tag}]" if quote_tag else ""))
+st.markdown(f"#### _🕊️ {quote_en}_")
 
 st.markdown("---")
 st.subheader("🎯 今日選項（請選擇你今天想實踐的行動）")
