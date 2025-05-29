@@ -11,6 +11,7 @@ UNITS = "metric"
 
 # === 語錄來源（GitHub JSON） ===
 JSON_URL = "https://raw.githubusercontent.com/smallcisum/bible/main/bible.json"
+
 def load_quotes_from_json(url):
     try:
         res = requests.get(url, timeout=5)
@@ -64,7 +65,8 @@ except:
     weather_desc = "取得失敗"
     temp = "--"
 
-# === 每日語錄與選項（根據日期固定）===
+# === 載入語錄並設定隨機種子 ===
+quotes = load_quotes_from_json(JSON_URL)
 today_seed = int(now.strftime("%Y%m%d"))
 random.seed(today_seed)
 quote = random.choice(quotes)
@@ -73,17 +75,21 @@ quote_ch, quote_en, quote_ref, quote_tag = quote
 
 # === 畫面呈現 ===
 st.markdown(f"""
-### 🌤️ 天氣：{CITY} {weather_desc}，氣溫 {temp}°C  
-### 📅 時間：{time_str}（{weekday_ch}）
+## 🌤️ 今日資訊
+- 📍 地點：**{CITY}**
+- ☁️ 天氣：**{weather_desc}**，氣溫 **{temp}°C**
+- 📅 時間：**{time_str}（{weekday_ch}）**
+
 ---
 """)
 
 st.subheader("✨ 今日小語：")
-st.write(f"📖 {quote_ch}" + (f"（{quote_ref}）" if quote_ref else "") + (f" [{quote_tag}]" if quote_tag else ""))
-st.write(f"_🕊️ {quote_en}_")
+st.markdown(f"**📖 {quote_ch}**" + (f"（{quote_ref}）" if quote_ref else "") + (f"　🏷️ *{quote_tag}*" if quote_tag else ""))
+st.markdown(f"_🕊️ {quote_en}_")
 
-st.markdown("---\n### 🎯 今日選項（請選擇你今天想實踐的行動）")
-user_choice = st.radio("請選擇：", options)
+st.markdown("---")
+st.subheader("🎯 今日選項")
+user_choice = st.radio("請選擇你今天想實踐的行動：", options)
 
 if st.button("✨ 我決定了！"):
     st.success(f"🧡 我決定今天要：「{user_choice}」！一起加油吧 👑✨")
