@@ -11,7 +11,6 @@ UNITS = "metric"
 
 # === 語錄來源（GitHub JSON） ===
 JSON_URL = "https://raw.githubusercontent.com/smallcisum/bible/main/bible.json"
-
 def load_quotes_from_json(url):
     try:
         res = requests.get(url, timeout=5)
@@ -21,20 +20,12 @@ def load_quotes_from_json(url):
 
     normalized = []
     for q in raw_data:
-        if len(q) == 2:
-            zh, en = q
-            ref, tag = "", ""
-        elif len(q) == 3:
-            zh, en, ref = q
-            tag = ""
-        elif len(q) == 4:
-            zh, en, ref, tag = q
-        else:
-            zh, en, ref, tag = "⚠️ 格式錯誤", "Invalid format", "", ""
-        normalized.append((zh.strip(), en.strip(), ref.strip(), tag.strip()))
+        zh = q.get("zh", "").strip()
+        en = q.get("en", "").strip()
+        ref = q.get("zh_ref", "").strip()
+        tag = q.get("topic", "").strip()
+        normalized.append((zh, en, ref, tag))
     return normalized
-
-quotes = load_quotes_from_json(JSON_URL)
 
 # === 行動選項 ===
 all_actions = [
