@@ -11,8 +11,15 @@ UNITS = "metric"
 
 # === 語錄來源（GitHub JSON） ===
 JSON_URL = "https://raw.githubusercontent.com/smallcisum/bible/main/bible.json"
+
 def load_quotes_from_json(url):
-      normalized = []
+    try:
+        res = requests.get(url, timeout=5)
+        raw_data = res.json()
+    except:
+        return [("⚠️ 無法載入資料", "Failed to load data", "", "")]
+
+    normalized = []
     for q in raw_data:
         if len(q) == 2:
             zh, en = q
@@ -27,6 +34,7 @@ def load_quotes_from_json(url):
         normalized.append((zh.strip(), en.strip(), ref.strip(), tag.strip()))
     return normalized
 
+quotes = load_quotes_from_json(JSON_URL)
 
 # === 行動選項 ===
 all_actions = [
@@ -50,15 +58,35 @@ def get_location():
 
 CITY, TZ = get_location()
 
+now = datetime.datetime.now(TZ)
+weekday_ch = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"][now.weekday()]
+time_str = now.strftime("%Y/%m/%d (%H:%M)")
 
-# 直接顯示用戶地點的時間和天氣
+# === 天氣資訊 ===
+weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units={UNITS}&lang={LANG}"
+try:
+    res = requests.get(weather_url, timeout=3)
+    data = res.json()
+    weather_desc = data["weather"][0]["description"]
+    temp = data["main"]["temp"]
+except:
+    weather_desc = "取得失敗"
+    temp = "--"
+
+# === 每日語錄與選項（根據日期固定）===
+today_seed = int(now.strftime("%Y%m%d"))
+random.seed(today_seed)
+quote = random.choice(quotes)
+options = random.sample(all_actions, 3)
+quote_ch, quote_en, quote_ref, quote_tag = quote
+
+# === 畫面呈現 ===
 st.markdown(f"""
-### 🌤️ 天氣：{CITY} {weather_desc}，氣溫 {temp}°C  
+### 🌤️ 天氣：{CITY} {weather_desc}，氣溫 {temp}°C  
 ### 📅 時間：{time_str}（{weekday_ch}）
 ---
 """)
 
-# 今日小語
 st.subheader("✨ 今日小語：")
 st.write(f"📖 {quote_ch}" + (f"（{quote_ref}）" if quote_ref else "") + (f" [{quote_tag}]" if quote_tag else ""))
 st.write(f"_🕊️ {quote_en}_")
