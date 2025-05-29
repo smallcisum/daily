@@ -37,9 +37,6 @@ def load_quotes_from_json(url):
         normalized.append((zh.strip(), en.strip(), ref.strip(), tag.strip()))
     return normalized
 
-quotes = load_quotes_from_json(JSON_URL)
-st.write(f"📖 語錄總數：{len(quotes)}")
-
 # === 行動選項 ===
 all_actions = [
     "努力", "奮起", "開心", "積極", "有效率", "放鬆", "溫柔", "專注", "快樂", "冒險",
@@ -79,6 +76,9 @@ except:
     temp = "--"
 
 # === 每日固定語錄與選項（根據今天的日期）===
+quotes = load_quotes_from_json(JSON_URL)
+st.write(f"📖 語錄總數：{len(quotes)}") # 讓這行保留，可以看到語錄是否載入成功
+
 today_seed = int(now.strftime("%Y%m%d"))
 random.seed(today_seed)
 quote = random.choice(quotes)
@@ -86,12 +86,15 @@ options = random.sample(all_actions, 3)
 quote_ch, quote_en, quote_ref, quote_tag = quote
 
 # === 畫面呈現 ===
+
+# 直接顯示用戶地點的時間和天氣
 st.markdown(f"""
-### 🌤️ 天氣：{CITY} {weather_desc}，氣溫 {temp}°C  
+### 🌤️ 天氣：{CITY} {weather_desc}，氣溫 {temp}°C  
 ### 📅 時間：{time_str}（{weekday_ch}）
 ---
 """)
 
+# 今日小語
 st.subheader("✨ 今日小語：")
 st.write(f"📖 {quote_ch}" + (f"（{quote_ref}）" if quote_ref else "") + (f" [{quote_tag}]" if quote_tag else ""))
 st.write(f"_🕊️ {quote_en}_")
